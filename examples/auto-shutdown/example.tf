@@ -95,8 +95,8 @@ module "log-analytics" {
 # Key Vault
 #-----------------------------------------------------------------------------
 module "key_vault" {
-  source = "git@github.com:terraform-az-modules/terraform-azure-key-vault.git?ref=master"
-  #   version = "1.2.0"
+  source                        = "terraform-az-modules/vault/azure"
+  version                       = "1.0.0"
   name                          = "core"
   environment                   = "dev"
   label_order                   = ["name", "environment", "location"]
