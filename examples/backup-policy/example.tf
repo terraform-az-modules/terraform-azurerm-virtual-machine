@@ -82,9 +82,9 @@ module "security_group" {
 module "log-analytics" {
   source                      = "terraform-az-modules/log-analytics/azure"
   version                     = "1.0.0"
-  name                = "core"
-  environment         = "dev"
-  label_order         = ["name", "environment", "location"]
+  name                        = "core"
+  environment                 = "dev"
+  label_order                 = ["name", "environment", "location"]
   log_analytics_workspace_sku = "PerGB2018"
   resource_group_name         = module.resource_group.resource_group_name
   location                    = module.resource_group.resource_group_location
