@@ -80,7 +80,7 @@ module "security_group" {
 # Key Vault
 #-----------------------------------------------------------------------------
 module "key_vault" {
-  source                        = "terraform-az-modules/vault/azure"
+  source                        = "terraform-az-modules/key-vault/azure"
   version                       = "1.0.0"
   name                          = "core"
   environment                   = "dev"
