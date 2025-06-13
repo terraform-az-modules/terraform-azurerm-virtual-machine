@@ -80,10 +80,11 @@ module "security_group" {
 # Log Analytics
 #-----------------------------------------------------------------------------
 module "log-analytics" {
-  source                      = "git@github.com:terraform-az-modules/terraform-azure-log-analytics.git?ref=master"
-  name                        = "app1"
-  environment                 = "test"
-  label_order                 = ["name", "environment"]
+  source                      = "terraform-az-modules/log-analytics/azure"
+  version                     = "1.0.0"
+  name                = "core"
+  environment         = "dev"
+  label_order         = ["name", "environment", "location"]
   log_analytics_workspace_sku = "PerGB2018"
   resource_group_name         = module.resource_group.resource_group_name
   location                    = module.resource_group.resource_group_location
