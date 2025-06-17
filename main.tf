@@ -112,38 +112,18 @@ resource "azurerm_key_vault_key" "example" {
   key_type        = var.key_type
   key_size        = var.key_size
   expiration_date = var.key_expiration_date
-  key_opts = [
-    "decrypt",
-    "encrypt",
-    "sign",
-    "unwrapKey",
-    "verify",
-    "wrapKey",
-  ]
+  key_opts        = var.key_opts
 }
 
 ##-----------------------------------------------------------------------------
 ## Key Vault Access Policy - Grants disk encryption identity access to Key Vault
 ##-----------------------------------------------------------------------------
 resource "azurerm_key_vault_access_policy" "main" {
-  count        = var.enabled && var.enable_disk_encryption_set && var.key_vault_rbac_auth_enabled == false ? 1 : 0
-  key_vault_id = var.key_vault_id
-  tenant_id    = azurerm_disk_encryption_set.example[0].identity[0].tenant_id
-  object_id    = azurerm_disk_encryption_set.example[0].identity[0].principal_id
-  key_permissions = [
-    "Create",
-    "Delete",
-    "Get",
-    "Purge",
-    "Recover",
-    "Update",
-    "Get",
-    "WrapKey",
-    "UnwrapKey",
-    "List",
-    "Decrypt",
-    "Sign"
-  ]
+  count           = var.enabled && var.enable_disk_encryption_set && var.key_vault_rbac_auth_enabled == false ? 1 : 0
+  key_vault_id    = var.key_vault_id
+  tenant_id       = azurerm_disk_encryption_set.example[0].identity[0].tenant_id
+  object_id       = azurerm_disk_encryption_set.example[0].identity[0].principal_id
+  key_permissions = var.key_permissions
 }
 
 ##-----------------------------------------------------------------------------

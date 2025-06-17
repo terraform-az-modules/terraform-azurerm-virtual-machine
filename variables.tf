@@ -659,6 +659,38 @@ variable "user_object_id" {
   description = "Map of Principal IDs and Role Definitions to assign in Key Vault."
 }
 
+variable "key_permissions" {
+  description = "List of Key Vault key permissions"
+  type        = list(string)
+  default = [
+    "Create",
+    "Delete",
+    "Get",
+    "Purge",
+    "Recover",
+    "Update",
+    "WrapKey",
+    "UnwrapKey",
+    "List",
+    "Decrypt",
+    "Sign"
+  ]
+}
+
+variable "key_opts" {
+  description = "List of key operations for Key Vault keys"
+  type        = list(string)
+  default = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey"
+  ]
+}
+
+
 ##-----------------------------------------------------------------------------
 ## Backup
 ##-----------------------------------------------------------------------------

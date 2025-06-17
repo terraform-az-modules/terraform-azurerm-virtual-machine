@@ -157,7 +157,6 @@ module "virtual-machine" {
   image_offer               = "0001-com-ubuntu-server-jammy"
   image_sku                 = "22_04-lts-gen2"
   image_version             = "latest"
-
   data_disks = [
     {
       name                 = "disk1"
@@ -165,7 +164,6 @@ module "virtual-machine" {
       storage_account_type = "StandardSSD_LRS"
     }
   ]
-
   extensions = [
     {
       extension_publisher            = "Microsoft.Azure.ActiveDirectory"
@@ -176,14 +174,12 @@ module "virtual-machine" {
       automatic_upgrade_enabled      = false
     }
   ]
-
   user_object_id = {
     "user1" = {
       role_definition_name = "Virtual Machine Administrator Login"
       principal_id         = data.azurerm_client_config.current_client_config.object_id
     }
   }
-
   shutdown_schedule = {
     daily_recurrence_time = "2000"
     notification_settings = {

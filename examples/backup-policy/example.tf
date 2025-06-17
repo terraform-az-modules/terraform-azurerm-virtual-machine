@@ -60,7 +60,6 @@ module "security_group" {
   label_order         = ["name", "environment", "location"]
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
-
   inbound_rules = [
     {
       name                       = "ssh"
