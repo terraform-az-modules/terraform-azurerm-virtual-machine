@@ -155,7 +155,6 @@ module "virtual-machine" {
   private_ip_addresses       = ["10.0.1.8"]
   network_security_group_id  = module.security_group.id
   vm_size                    = "Standard_B1s"
-  allow_extension_operations = true
   admin_username             = "ubuntu"
   public_key                 = "ssh-rsa AAAA"
   caching                    = "ReadWrite"
