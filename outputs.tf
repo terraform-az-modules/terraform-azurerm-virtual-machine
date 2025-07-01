@@ -54,12 +54,12 @@ output "windows_virtual_machine_id" {
 ## Disk Encryption Outputs
 ##-----------------------------------------------------------------------------
 output "disk_encryption_set_id" {
-  value       = try(azurerm_disk_encryption_set.example[*].id, null)
+  value       = try(azurerm_disk_encryption_set.main[*].id, null)
   description = "The ID of the Disk Encryption Set."
 }
 
 output "key_id" {
-  value       = try(azurerm_key_vault_key.example[*].id, null)
+  value       = try(azurerm_key_vault_key.main[*].id, null)
   description = "ID of key that is used for disk encryption."
 }
 
@@ -76,12 +76,12 @@ output "extension_id" {
 ##-----------------------------------------------------------------------------
 output "service_vault_id" {
   description = "The Principal ID associated with this Managed Service Identity."
-  value       = azurerm_recovery_services_vault.example[*].identity[0].principal_id
+  value       = azurerm_recovery_services_vault.main[*].identity[0].principal_id
 }
 
 output "service_vault_tenant_id" {
   description = "The Tenant ID associated with this Managed Service Identity."
-  value       = azurerm_recovery_services_vault.example[*].identity[0].tenant_id
+  value       = azurerm_recovery_services_vault.main[*].identity[0].tenant_id
 }
 
 output "vm_backup_policy_id" {

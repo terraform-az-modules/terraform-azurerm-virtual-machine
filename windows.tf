@@ -4,7 +4,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   computer_name                = var.computer_name != null ? var.computer_name : (var.resource_position_prefix ? format("win-vm-%s", local.name) : format("%s-win-vm", local.name))
   resource_group_name          = var.resource_group_name
   location                     = var.location
-  network_interface_ids        = [element(azurerm_network_interface.default[*].id, count.index)]
+  network_interface_ids        = [azurerm_network_interface.default[0].id]
   size                         = var.vm_size
   admin_username               = var.admin_username
   admin_password               = var.admin_password
@@ -42,10 +42,10 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     }
   }
   os_disk {
-    name                      = var.resource_position_prefix ? format("vm-osdisk-%s", local.name) : format("%s-vm-osdisk", local.name)
+    name                      = var.resource_position_prefix ? format("osdisk-%s", local.name) : format("%s-osdisk", local.name)
     storage_account_type      = var.os_disk_storage_account_type
     caching                   = var.caching
-    disk_encryption_set_id    = var.enable_disk_encryption_set ? azurerm_disk_encryption_set.example[0].id : null
+    disk_encryption_set_id    = var.enable_disk_encryption_set ? azurerm_disk_encryption_set.main[0].id : null
     disk_size_gb              = var.disk_size_gb
     write_accelerator_enabled = var.enable_os_disk_write_accelerator
     dynamic "diff_disk_settings" {

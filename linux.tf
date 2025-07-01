@@ -7,7 +7,7 @@ resource "azurerm_linux_virtual_machine" "default" {
   admin_username                  = var.admin_username
   admin_password                  = var.disable_password_authentication ? null : var.admin_password
   disable_password_authentication = var.disable_password_authentication
-  network_interface_ids           = [element(azurerm_network_interface.default[*].id, count.index)]
+  network_interface_ids           = [azurerm_network_interface.default[0].id]
   source_image_id                 = var.source_image_id
   availability_set_id             = var.availability_set_enabled ? azurerm_availability_set.default[0].id : null
   proximity_placement_group_id    = var.proximity_placement_group_id
@@ -54,10 +54,10 @@ resource "azurerm_linux_virtual_machine" "default" {
     }
   }
   os_disk {
-    name                      = var.resource_position_prefix ? format("vm-os-disk-%s", local.name) : format("%s-vm-os-disk", local.name)
+    name                      = var.resource_position_prefix ? format("osdisk-%s", local.name) : format("%s-osdisk", local.name)
     storage_account_type      = var.os_disk_storage_account_type
     caching                   = var.caching
-    disk_encryption_set_id    = var.enable_disk_encryption_set ? azurerm_disk_encryption_set.example[0].id : null
+    disk_encryption_set_id    = var.enable_disk_encryption_set ? azurerm_disk_encryption_set.main[0].id : null
     disk_size_gb              = var.disk_size_gb
     write_accelerator_enabled = var.write_accelerator_enabled
   }

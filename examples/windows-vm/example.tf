@@ -189,6 +189,10 @@ module "virtual-machine" {
       extension_type_handler_version = "1.0"
       auto_upgrade_minor_version     = true
       automatic_upgrade_enabled      = false
+      settings = jsonencode({
+        mdmId = null
+      })
+      protected_settings = "{}"
     }
   ]
   log_analytics_workspace_id = module.log-analytics.workspace_id

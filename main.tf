@@ -18,9 +18,7 @@ module "labels" {
 ## Network Interface - Creates VM network connectivity with configurable settings
 ##-----------------------------------------------------------------------------
 resource "azurerm_network_interface" "default" {
-  count = var.enabled ? 1 : 0
-
-  # Use local values for naming
+  count                          = var.enabled ? 1 : 0
   name                           = var.resource_position_prefix ? format("nic-%s", local.name) : format("%s-nic", local.name)
   resource_group_name            = var.resource_group_name
   location                       = var.location
@@ -29,9 +27,7 @@ resource "azurerm_network_interface" "default" {
   accelerated_networking_enabled = var.enable_accelerated_networking
   internal_dns_name_label        = var.internal_dns_name_label
   tags                           = module.labels.tags
-
   ip_configuration {
-    # Use local value for IP config name
     name                          = var.resource_position_prefix ? format("ip-config-%s", local.name) : format("%s-ip-config", local.name)
     subnet_id                     = var.private_ip_address_version == "IPv4" ? var.subnet_id : null
     private_ip_address_version    = var.private_ip_address_version
@@ -43,11 +39,11 @@ resource "azurerm_network_interface" "default" {
 }
 
 ##-----------------------------------------------------------------------------
-## Availability Set - Creates fault and update domains for VM high availability
+## Availability Set - High availability for VMs
 ##-----------------------------------------------------------------------------
 resource "azurerm_availability_set" "default" {
   count                        = var.enabled && var.availability_set_enabled ? 1 : 0
-  name                         = var.resource_position_prefix ? format("vm-availability-set-%s", local.name) : format("%s-vm-availability-set", local.name)
+  name                         = var.resource_position_prefix ? format("avail-%s", local.name) : format("%s-avail", local.name)
   resource_group_name          = var.resource_group_name
   location                     = var.location
   platform_update_domain_count = var.platform_update_domain_count
@@ -80,8 +76,7 @@ resource "azurerm_public_ip" "default" {
 ## Network Security Group Association - Links NSGs to VM network interfaces
 ##-----------------------------------------------------------------------------
 resource "azurerm_network_interface_security_group_association" "default" {
-  count = var.enabled && var.network_interface_sg_enabled ? 1 : 0
-
+  count                     = var.enabled && var.network_interface_sg_enabled ? 1 : 0
   network_interface_id      = azurerm_network_interface.default[count.index].id
   network_security_group_id = var.network_security_group_id
 }
@@ -89,14 +84,12 @@ resource "azurerm_network_interface_security_group_association" "default" {
 ##-----------------------------------------------------------------------------
 ## Disk Encryption Set - Provides encryption for VM disks using Key Vault
 ##-----------------------------------------------------------------------------
-resource "azurerm_disk_encryption_set" "example" {
-  count = var.enabled && var.enable_disk_encryption_set ? 1 : 0
-
-  name                = var.resource_position_prefix ? format("vm-dsk-encrpt-%s", local.name) : format("%s-vm-dsk-encrpt", local.name)
+resource "azurerm_disk_encryption_set" "main" {
+  count               = var.enabled && var.enable_disk_encryption_set ? 1 : 0
+  name                = var.resource_position_prefix ? format("des-%s", local.name) : format("%s-des", local.name)
   resource_group_name = var.resource_group_name
   location            = var.location
-  key_vault_key_id    = var.enable_disk_encryption_set ? azurerm_key_vault_key.example[0].id : null
-
+  key_vault_key_id    = var.enable_disk_encryption_set ? azurerm_key_vault_key.main[0].id : null
   identity {
     type = "SystemAssigned"
   }
@@ -105,9 +98,9 @@ resource "azurerm_disk_encryption_set" "example" {
 ##-----------------------------------------------------------------------------
 ## Key Vault Key - Creates encryption keys for secure VM disk encryption
 ##-----------------------------------------------------------------------------
-resource "azurerm_key_vault_key" "example" {
+resource "azurerm_key_vault_key" "main" {
   count           = var.enabled && var.enable_disk_encryption_set ? 1 : 0
-  name            = var.resource_position_prefix ? format("vm-kc-key-%s", local.name) : format("%s-vm-kv-key", local.name)
+  name            = var.resource_position_prefix ? format("kv-%s", local.name) : format("%s-kv", local.name)
   key_vault_id    = var.key_vault_id
   key_type        = var.key_type
   key_size        = var.key_size
@@ -115,16 +108,6 @@ resource "azurerm_key_vault_key" "example" {
   key_opts        = var.key_opts
 }
 
-##-----------------------------------------------------------------------------
-## Key Vault Access Policy - Grants disk encryption identity access to Key Vault
-##-----------------------------------------------------------------------------
-resource "azurerm_key_vault_access_policy" "main" {
-  count           = var.enabled && var.enable_disk_encryption_set && var.key_vault_rbac_auth_enabled == false ? 1 : 0
-  key_vault_id    = var.key_vault_id
-  tenant_id       = azurerm_disk_encryption_set.example[0].identity[0].tenant_id
-  object_id       = azurerm_disk_encryption_set.example[0].identity[0].principal_id
-  key_permissions = var.key_permissions
-}
 
 ##-----------------------------------------------------------------------------
 ## Managed Disk - Creates additional data disks for VM storage
@@ -142,7 +125,7 @@ resource "azurerm_managed_disk" "data_disk" {
   create_option                 = var.create_option
   public_network_access_enabled = var.public_network_access_enabled
   disk_size_gb                  = each.value.data_disk.disk_size_gb
-  disk_encryption_set_id        = var.enable_disk_encryption_set ? azurerm_disk_encryption_set.example[0].id : null
+  disk_encryption_set_id        = var.enable_disk_encryption_set ? azurerm_disk_encryption_set.main[0].id : null
   depends_on = [
     azurerm_role_assignment.azurerm_disk_encryption_set_key_vault_access
   ]
@@ -164,26 +147,9 @@ resource "azurerm_virtual_machine_data_disk_attachment" "data_disk" {
 }
 
 ##-----------------------------------------------------------------------------
-## VM Extension - Installs monitoring agents and other extensions on VMs
-##-----------------------------------------------------------------------------
-resource "azurerm_virtual_machine_extension" "vm_insight_monitor_agent" {
-  for_each                   = var.enabled ? { for extension in var.extensions : extension.extension_name => extension } : {}
-  name                       = each.value.extension_name
-  virtual_machine_id         = var.is_vm_windows ? azurerm_windows_virtual_machine.win_vm[0].id : azurerm_linux_virtual_machine.default[0].id
-  publisher                  = each.value.extension_publisher
-  type                       = each.value.extension_type
-  type_handler_version       = each.value.extension_type_handler_version
-  auto_upgrade_minor_version = lookup(each.value, "auto_upgrade_minor_version", null)
-  automatic_upgrade_enabled  = lookup(each.value, "automatic_upgrade_enabled", null)
-  settings                   = lookup(each.value, "settings", null)
-  protected_settings         = lookup(each.value, "protected_settings", null)
-  tags                       = module.labels.tags
-}
-
-##-----------------------------------------------------------------------------
 ## Public IP Diagnostic Setting - Configures monitoring for public IP resources
 ##-----------------------------------------------------------------------------
-resource "azurerm_monitor_diagnostic_setting" "pip_gw" {
+resource "azurerm_monitor_diagnostic_setting" "pip_diagnostic" {
   count                          = local.diagnostic
   name                           = var.resource_position_prefix ? format("vm-pip-diag-%s", local.name) : format("%s-vm-pip-diag", local.name)
   target_resource_id             = azurerm_public_ip.default[0].id
@@ -237,7 +203,7 @@ resource "azurerm_monitor_diagnostic_setting" "nic_diagnostic" {
 ##-----------------------------------------------------------------------------
 ## Recovery Services Vault - Creates backup storage for VM recovery
 ##-----------------------------------------------------------------------------
-resource "azurerm_recovery_services_vault" "example" {
+resource "azurerm_recovery_services_vault" "main" {
   count                         = (var.vault_service == null && var.backup_enabled && var.enabled) ? 1 : (var.vault_service != null ? 1 : 0)
   name                          = var.resource_position_prefix ? format("vm-service-vault-%s", local.name) : format("%s-vm-service-vault", local.name)
   location                      = var.location
@@ -257,22 +223,19 @@ resource "azurerm_backup_policy_vm" "policy" {
   count               = (var.backup_policy == null && var.backup_enabled && var.enabled) ? 1 : (var.backup_policy != null ? 1 : 0)
   name                = var.resource_position_prefix ? format("policy-vm-%s", local.name) : format("%s-policy-vm", local.name)
   resource_group_name = var.resource_group_name
-  recovery_vault_name = azurerm_recovery_services_vault.example[count.index].name
+  recovery_vault_name = azurerm_recovery_services_vault.main[count.index].name
   policy_type         = var.backup_policy_type != null ? var.backup_policy_type : "V2"
   timezone            = var.backup_policy_time_zone != null ? var.backup_policy_time_zone : "UTC"
-
   backup {
     frequency = var.backup_policy_frequency != null ? var.backup_policy_frequency : "Daily"
     time      = var.backup_policy_time != null ? var.backup_policy_time : "23:00"
   }
-
   dynamic "retention_daily" {
     for_each = var.backup_policy_retention["daily"].enabled ? [1] : []
     content {
       count = var.backup_policy_retention["daily"].count
     }
   }
-
   dynamic "retention_weekly" {
     for_each = var.backup_policy_retention["weekly"].enabled ? [1] : []
     content {
@@ -280,7 +243,6 @@ resource "azurerm_backup_policy_vm" "policy" {
       weekdays = var.backup_policy_retention["weekly"].weekdays
     }
   }
-
   dynamic "retention_monthly" {
     for_each = var.backup_policy_retention["monthly"].enabled ? [1] : []
     content {
@@ -294,10 +256,10 @@ resource "azurerm_backup_policy_vm" "policy" {
 ##-----------------------------------------------------------------------------
 ## Protected VM - Associates VMs with backup policies for automated backups
 ##-----------------------------------------------------------------------------
-resource "azurerm_backup_protected_vm" "example" {
+resource "azurerm_backup_protected_vm" "main" {
   count               = var.enabled && var.backup_enabled ? 1 : 0
   resource_group_name = var.resource_group_name
-  recovery_vault_name = azurerm_recovery_services_vault.example[count.index].name
+  recovery_vault_name = azurerm_recovery_services_vault.main[count.index].name
   backup_policy_id    = azurerm_backup_policy_vm.policy[count.index].id
   source_vm_id        = var.is_vm_linux ? azurerm_linux_virtual_machine.default[count.index].id : azurerm_windows_virtual_machine.win_vm[count.index].id
 }
@@ -306,22 +268,19 @@ resource "azurerm_backup_protected_vm" "example" {
 ## VM Auto-Shutdown Schedule - Configures automatic shutdown for cost optimization
 ##-----------------------------------------------------------------------------
 resource "azurerm_dev_test_global_vm_shutdown_schedule" "shutdown_schedule" {
-  count = var.enabled && var.shutdown_schedule != null ? 1 : 0
-
+  count                 = var.enabled && var.shutdown_schedule != null ? 1 : 0
   daily_recurrence_time = var.shutdown_schedule.daily_recurrence_time
   location              = var.location
   timezone              = var.shutdown_schedule.timezone
   virtual_machine_id    = var.is_vm_windows ? azurerm_windows_virtual_machine.win_vm[0].id : azurerm_linux_virtual_machine.default[0].id
   enabled               = var.shutdown_schedule.enabled
   tags                  = var.shutdown_schedule.tags
-
   notification_settings {
     enabled         = var.shutdown_schedule.notification_settings.enabled
     email           = var.shutdown_schedule.notification_settings.email
     time_in_minutes = var.shutdown_schedule.notification_settings.time_in_minutes
     webhook_url     = var.shutdown_schedule.notification_settings.webhook_url
   }
-
   depends_on = [
     azurerm_virtual_machine_data_disk_attachment.data_disk
   ]
