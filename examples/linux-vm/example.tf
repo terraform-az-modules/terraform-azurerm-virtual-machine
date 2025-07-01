@@ -151,18 +151,18 @@ module "virtual-machine" {
       principal_id         = data.azurerm_client_config.current_client_config.object_id
     }
   }
-  subnet_id                  = module.subnet.subnet_ids.subnet1
-  private_ip_addresses       = ["10.0.1.8"]
-  network_security_group_id  = module.security_group.id
-  vm_size                    = "Standard_B1s"
-  admin_username             = "ubuntu"
-  public_key                 = "ssh-rsa AAAA"
-  caching                    = "ReadWrite"
-  disk_size_gb               = 30
-  image_publisher            = "Canonical"
-  image_offer                = "0001-com-ubuntu-server-jammy"
-  image_sku                  = "22_04-lts-gen2"
-  image_version              = "latest"
+  subnet_id                 = module.subnet.subnet_ids.subnet1
+  private_ip_addresses      = ["10.0.1.8"]
+  network_security_group_id = module.security_group.id
+  vm_size                   = "Standard_B1s"
+  admin_username            = "ubuntu"
+  public_key                = "ssh-rsa AAAA"
+  caching                   = "ReadWrite"
+  disk_size_gb              = 30
+  image_publisher           = "Canonical"
+  image_offer               = "0001-com-ubuntu-server-jammy"
+  image_sku                 = "22_04-lts-gen2"
+  image_version             = "latest"
   data_disks = [
     {
       name                 = "disk1"
