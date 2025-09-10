@@ -188,10 +188,10 @@ resource "azurerm_monitor_diagnostic_setting" "nic_diagnostic" {
   eventhub_authorization_rule_id = var.eventhub_authorization_rule_id
   log_analytics_workspace_id     = var.log_analytics_workspace_id
   log_analytics_destination_type = var.log_analytics_destination_type
-  dynamic "metric" {
+  dynamic "enabled_metric" {
     for_each = var.metric_enabled ? ["AllMetrics"] : []
     content {
-      category = metric.value
+      category = enabled_metric.value
     }
   }
   lifecycle {
