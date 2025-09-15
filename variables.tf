@@ -362,7 +362,7 @@ variable "network_security_group_id" {
 ##-----------------------------------------------------------------------------
 variable "public_ip_enabled" {
   type        = bool
-  default     = true
+  default     = false
   description = "Whether to create a public IP for the VM."
 }
 
@@ -533,7 +533,7 @@ variable "public_network_access_enabled" {
 
 variable "allow_extension_operations" {
   type        = bool
-  default     = true
+  default     = false
   description = "Whether extension operations are allowed on the VM"
 }
 
