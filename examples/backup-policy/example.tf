@@ -152,6 +152,21 @@ module "virtual-machine" {
       principal_id         = data.azurerm_client_config.current_client_config.object_id
     }
   }
+  backup_policy_retention = {
+    daily = {
+      enabled   = true
+      frequency = "Daily"
+      count     = "30"
+      weekdays  = []
+      weeks     = []
+    }
+    weekly = {
+      enabled = false
+    }
+    monthly = {
+      enabled = false
+    }
+  }
   subnet_id                 = module.subnet.subnet_ids.subnet1
   private_ip_addresses      = ["10.0.1.9"]
   network_security_group_id = module.security_group.id

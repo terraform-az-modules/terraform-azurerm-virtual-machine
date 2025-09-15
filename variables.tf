@@ -85,7 +85,7 @@ variable "resource_group_name" {
   description = "The name of the resource group in which to create the Log Analytics."
 }
 
-variable "enabled" {
+variable "enable" {
   type        = bool
   default     = true
   description = "Set to false to prevent the module from creating any resources."
@@ -201,6 +201,7 @@ variable "data_disks" {
     name                 = string
     storage_account_type = string
     disk_size_gb         = number
+    caching              = optional(string, "ReadWrite")
   }))
   default     = []
   description = "List of managed Data Disks to create for the VM."
@@ -532,7 +533,7 @@ variable "public_network_access_enabled" {
 
 variable "allow_extension_operations" {
   type        = bool
-  default     = false
+  default     = true
   description = "Whether extension operations are allowed on the VM"
 }
 
@@ -706,12 +707,6 @@ variable "vault_service" {
   description = "The ID of the Recovery Services Vault for backups."
 }
 
-variable "backup_policy" {
-  type        = string
-  default     = null
-  description = "The ID of the Backup Policy to use."
-}
-
 variable "backup_policy_time" {
   type        = string
   default     = "23:00"
@@ -749,35 +744,39 @@ variable "backup_policy_type" {
 variable "backup_policy_retention" {
   type = map(object({
     enabled   = bool
-    frequency = string
-    count     = string
-    weekdays  = list(string)
-    weeks     = list(string)
+    frequency = optional(string)
+    count     = optional(string)
+    weekdays  = optional(list(string), [])
+    weeks     = optional(list(string), [])
   }))
-  default = {
-    daily = {
-      enabled   = true
-      frequency = "Daily"
-      count     = "7"
-      weekdays  = []
-      weeks     = []
-    },
-    weekly = {
-      enabled   = false
-      frequency = "Weekly"
-      count     = "4"
-      weekdays  = ["Saturday"]
-      weeks     = []
-    },
-    monthly = {
-      enabled   = false
-      frequency = "Monthly"
-      count     = "3"
-      weekdays  = ["Saturday"]
-      weeks     = ["Last"]
-    }
+  default     = {}
+  description = <<EOT
+Retention configuration for different backup frequencies.
+Example:
+backup_policy_retention = {
+  daily = {
+    enabled   = true
+    frequency = "Daily"
+    count     = "7"
+    weekdays  = []
+    weeks     = []
   }
-  description = "Retention configuration for different backup frequencies."
+  weekly = {
+    enabled   = false
+    frequency = "Weekly"
+    count     = "4"
+    weekdays  = ["Saturday"]
+    weeks     = []
+  }
+  monthly = {
+    enabled   = false
+    frequency = "Monthly"
+    count     = "3"
+    weekdays  = ["Saturday"]
+    weeks     = ["Last"]
+  }
+}
+EOT
 }
 
 ##-----------------------------------------------------------------------------

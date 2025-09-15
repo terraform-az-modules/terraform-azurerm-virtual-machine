@@ -1,5 +1,5 @@
 resource "azurerm_linux_virtual_machine" "default" {
-  count                           = var.is_vm_linux && var.enabled ? 1 : 0
+  count                           = var.is_vm_linux && var.enable ? 1 : 0
   name                            = var.resource_position_prefix ? format("vm-%s", local.name) : format("%s-vm", local.name)
   resource_group_name             = var.resource_group_name
   location                        = var.location

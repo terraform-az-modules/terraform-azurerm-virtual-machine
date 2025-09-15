@@ -1,5 +1,5 @@
 resource "azurerm_windows_virtual_machine" "win_vm" {
-  count                        = var.is_vm_windows && var.enabled ? 1 : 0
+  count                        = var.is_vm_windows && var.enable ? 1 : 0
   name                         = var.resource_position_prefix ? format("vm-%s", local.name) : format("%s-vm", local.name)
   computer_name                = var.computer_name != null ? var.computer_name : (var.resource_position_prefix ? format("win-vm-%s", local.name) : format("%s-win-vm", local.name))
   resource_group_name          = var.resource_group_name
@@ -12,7 +12,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   provision_vm_agent           = var.provision_vm_agent
   allow_extension_operations   = var.allow_extension_operations
   dedicated_host_id            = var.dedicated_host_id
-  enable_automatic_updates     = var.enable_automatic_updates
+  automatic_updates_enabled    = var.enable_automatic_updates
   license_type                 = var.license_type
   availability_set_id          = var.availability_set_enabled ? azurerm_availability_set.default[0].id : null
   encryption_at_host_enabled   = var.enable_encryption_at_host
