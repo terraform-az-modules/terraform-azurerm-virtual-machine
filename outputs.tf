@@ -76,23 +76,15 @@ output "extension_id" {
 ##-----------------------------------------------------------------------------
 output "service_vault_id" {
   description = "The Principal ID associated with this Managed Service Identity."
-  value       = azurerm_recovery_services_vault.main[*].identity[0].principal_id
+  value       = try(azurerm_recovery_services_vault.main[*].identity[0].principal_id, null)
 }
 
 output "service_vault_tenant_id" {
   description = "The Tenant ID associated with this Managed Service Identity."
-  value       = azurerm_recovery_services_vault.main[*].identity[0].tenant_id
+  value       = try(azurerm_recovery_services_vault.main[*].identity[0].tenant_id, null)
 }
 
 output "vm_backup_policy_id" {
   description = "The ID of the VM Backup Policy."
-  value       = azurerm_backup_policy_vm.policy[*].id
-}
-
-##-----------------------------------------------------------------------------
-## Tags Output
-##-----------------------------------------------------------------------------
-output "tags" {
-  value       = module.labels.tags
-  description = "The tags associated to resources."
+  value       = try(azurerm_backup_policy_vm.policy[*].id, [])
 }

@@ -34,7 +34,7 @@ resource "azurerm_network_interface" "default" {
     private_ip_address_allocation = var.private_ip_address_allocation
     public_ip_address_id          = var.public_ip_enabled ? element(azurerm_public_ip.default[*].id, count.index) : null
     primary                       = var.primary
-    private_ip_address            = var.private_ip_address_allocation == "Static" ? element(var.private_ip_addresses, count.index) : ""
+    private_ip_address            = var.private_ip_address_allocation == "Static" ? element(var.private_ip_addresses, count.index) : null
   }
 }
 

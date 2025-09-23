@@ -62,12 +62,12 @@ resource "azurerm_linux_virtual_machine" "default" {
     write_accelerator_enabled = var.write_accelerator_enabled
   }
   dynamic "source_image_reference" {
-    for_each = var.storage_image_reference_enabled ? [1] : []
+    for_each = var.source_image_id == null && var.storage_image_reference_enabled ? [1] : []
     content {
       publisher = var.image_publisher
-      offer     = var.custom_image_id == "" ? var.image_offer : ""
-      sku       = var.custom_image_id == "" ? var.image_sku : ""
-      version   = var.custom_image_id == "" ? var.image_version : ""
+      offer     = var.image_offer
+      sku       = var.image_sku
+      version   = var.image_version
     }
   }
   dynamic "termination_notification" {

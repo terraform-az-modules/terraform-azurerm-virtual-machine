@@ -67,11 +67,11 @@ module "security_group" {
       priority                   = 101
       access                     = "Allow"
       protocol                   = "Tcp"
-      source_address_prefix      = "0.0.0.0/0"
+      source_address_prefix      = "10.0.0.0/16"
       source_port_range          = "*"
       destination_address_prefix = "0.0.0.0/0"
       destination_port_range     = "22"
-      description                = "ssh allowed port"
+      description                = "SSH from VNet to internet"
     }
   ]
 }
@@ -129,7 +129,6 @@ module "log-analytics" {
   log_analytics_workspace_sku = "PerGB2018"
   resource_group_name         = module.resource_group.resource_group_name
   location                    = module.resource_group.resource_group_location
-  log_analytics_workspace_id  = module.log-analytics.workspace_id
 }
 
 #-----------------------------------------------------------------------------

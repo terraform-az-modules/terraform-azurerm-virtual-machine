@@ -47,7 +47,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     caching                   = var.caching
     disk_encryption_set_id    = var.enable_disk_encryption_set ? azurerm_disk_encryption_set.main[0].id : null
     disk_size_gb              = var.disk_size_gb
-    write_accelerator_enabled = var.enable_os_disk_write_accelerator
+    write_accelerator_enabled = var.write_accelerator_enabled
     dynamic "diff_disk_settings" {
       for_each = var.diff_disk_settings == null ? [] : ["diff_disk_settings"]
       content {
@@ -57,12 +57,12 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     }
   }
   dynamic "source_image_reference" {
-    for_each = var.source_image_id == null ? [1] : []
+    for_each = var.source_image_id == null && var.storage_image_reference_enabled ? [1] : []
     content {
-      publisher = var.custom_image_id != null ? var.image_publisher : ""
-      offer     = var.custom_image_id != null ? var.image_offer : ""
-      sku       = var.custom_image_id != null ? var.image_sku : ""
-      version   = var.custom_image_id != null ? var.image_version : ""
+      publisher = var.image_publisher
+      offer     = var.image_offer
+      sku       = var.image_sku
+      version   = var.image_version
     }
   }
   dynamic "termination_notification" {

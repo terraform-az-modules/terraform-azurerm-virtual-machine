@@ -190,12 +190,6 @@ variable "write_accelerator_enabled" {
   description = "Specifies if Write Accelerator is enabled on the disk. Only for Premium_LRS with no caching and M-Series VMs."
 }
 
-variable "enable_os_disk_write_accelerator" {
-  type        = bool
-  default     = false
-  description = "Should Write Accelerator be Enabled for the OS Disk? Requires Premium_LRS storage and None caching."
-}
-
 variable "data_disks" {
   type = list(object({
     name                 = string
@@ -229,12 +223,6 @@ variable "source_image_id" {
   type        = any
   default     = null
   description = "The ID of a custom Image to use for the VM."
-}
-
-variable "custom_image_id" {
-  type        = string
-  default     = ""
-  description = "Specifies the ID of the Custom Image for the Virtual Machine."
 }
 
 variable "image_publisher" {
@@ -551,7 +539,7 @@ variable "termination_notification" {
 
 variable "maintenance_configuration_resource_id" {
   type        = string
-  default     = ""
+  default     = null
   description = "The Azure resource ID of the maintenance configuration to apply to this virtual machine."
 }
 
@@ -699,12 +687,6 @@ variable "backup_enabled" {
   type        = bool
   default     = false
   description = "Whether to enable backup for the VM using Recovery Services Vault."
-}
-
-variable "vault_service" {
-  type        = string
-  default     = null
-  description = "The ID of the Recovery Services Vault for backups."
 }
 
 variable "backup_policy_time" {
