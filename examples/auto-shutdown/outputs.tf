@@ -23,7 +23,3 @@ output "virtual_machine_id" {
   description = "The ID of the Virtual Machine."
 }
 
-output "tags" {
-  value       = module.virtual-machine.tags
-  description = "The tags associated to resources."
-}
