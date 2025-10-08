@@ -74,7 +74,7 @@ module "security_group" {
       description                = "allow rdp port"
     },
     {
-      name                       = "http"
+      name                       = "https"
       priority                   = 102
       access                     = "Allow"
       protocol                   = "Tcp"
@@ -165,7 +165,6 @@ module "virtual-machine" {
   computer_name             = "app-win-comp"
   vm_size                   = "Standard_B1s"
   admin_username            = "azureadmin"
-  admin_password            = "Password@123"
   disk_size_gb              = 128
   image_publisher           = "MicrosoftWindowsServer"
   image_offer               = "WindowsServer"

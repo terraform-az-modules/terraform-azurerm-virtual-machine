@@ -2,7 +2,7 @@
 ## Network Interface Outputs
 ##-----------------------------------------------------------------------------
 output "network_interface_id" {
-  value       = azurerm_network_interface.default[*].id
+  value       = azurerm_network_interface.default[0].id
   description = "The ID of the Network Interface."
 }
 
@@ -41,12 +41,12 @@ output "public_ip_address" {
 ## Virtual Machine Outputs
 ##-----------------------------------------------------------------------------
 output "linux_virtual_machine_id" {
-  value       = try(azurerm_linux_virtual_machine.default[*].id, null)
+  value       = try(azurerm_linux_virtual_machine.default[0].id, null)
   description = "The ID of the Linux Virtual Machine."
 }
 
 output "windows_virtual_machine_id" {
-  value       = try(azurerm_windows_virtual_machine.win_vm[*].id, null)
+  value       = try(azurerm_windows_virtual_machine.win_vm[0].id, null)
   description = "The ID of the Windows Virtual Machine."
 }
 
@@ -86,5 +86,5 @@ output "service_vault_tenant_id" {
 
 output "vm_backup_policy_id" {
   description = "The ID of the VM Backup Policy."
-  value       = try(azurerm_backup_policy_vm.policy[*].id, [])
+  value       = try(azurerm_backup_policy_vm.policy[0].id, [])
 }

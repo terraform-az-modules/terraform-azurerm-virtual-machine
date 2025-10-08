@@ -133,7 +133,7 @@ variable "admin_username" {
 
 variable "admin_password" {
   type        = string
-  default     = null
+  default     = "Password@123"
   sensitive   = true
   description = "The password for the local administrator account. Required for Windows VM."
 }
@@ -537,12 +537,6 @@ variable "termination_notification" {
   description = "Enable termination notification with ISO 8601 timeout (default: enabled=true, timeout=PT10M)."
 }
 
-variable "maintenance_configuration_resource_id" {
-  type        = string
-  default     = null
-  description = "The Azure resource ID of the maintenance configuration to apply to this virtual machine."
-}
-
 ##-----------------------------------------------------------------------------
 ## VM Patching
 ##-----------------------------------------------------------------------------
@@ -679,7 +673,6 @@ variable "key_opts" {
   ]
 }
 
-
 ##-----------------------------------------------------------------------------
 ## Backup
 ##-----------------------------------------------------------------------------
@@ -727,38 +720,22 @@ variable "backup_policy_retention" {
   type = map(object({
     enabled   = bool
     frequency = optional(string)
-    count     = optional(string)
+    count     = optional(number)
     weekdays  = optional(list(string), [])
     weeks     = optional(list(string), [])
   }))
-  default     = {}
-  description = <<EOT
-Retention configuration for different backup frequencies.
-Example:
-backup_policy_retention = {
-  daily = {
-    enabled   = true
-    frequency = "Daily"
-    count     = "7"
-    weekdays  = []
-    weeks     = []
+  default = {
+    daily = {
+      enabled = false
+    }
+    weekly = {
+      enabled = false
+    }
+    monthly = {
+      enabled = false
+    }
   }
-  weekly = {
-    enabled   = false
-    frequency = "Weekly"
-    count     = "4"
-    weekdays  = ["Saturday"]
-    weeks     = []
-  }
-  monthly = {
-    enabled   = false
-    frequency = "Monthly"
-    count     = "3"
-    weekdays  = ["Saturday"]
-    weeks     = ["Last"]
-  }
-}
-EOT
+  description = "Retention configuration for different backup frequencies."
 }
 
 ##-----------------------------------------------------------------------------
@@ -864,4 +841,62 @@ Timezone should be specified as a valid IANA time zone identifier.
 EOT
 }
 
+variable "enable_maintenance_configuration" {
+  description = "Enable maintenance configuration for VMs"
+  type        = bool
+  default     = false
+}
 
+variable "maintenance_configuration_scope" {
+  description = "The scope of the Maintenance Configuration. Possible values are Extension, Host, InGuestPatch, OSImage, SQLDB or SQLManagedInstance"
+  type        = string
+  default     = "Host"
+}
+
+variable "maintenance_configuration_visibility" {
+  description = "The visibility of the Maintenance Configuration. Only allowable value is Custom"
+  type        = string
+  default     = "Custom"
+}
+
+variable "maintenance_in_guest_user_patch_mode" {
+  description = "The in guest user patch mode. Possible values are Platform or User. Must be specified when scope is InGuestPatch"
+  type        = string
+  default     = null
+}
+
+variable "maintenance_configuration_properties" {
+  description = "A mapping of properties to assign to the maintenance configuration"
+  type        = map(string)
+  default     = {}
+}
+
+variable "maintenance_window" {
+  description = "Maintenance window configuration block"
+  type = object({
+    start_date_time      = string
+    expiration_date_time = optional(string)
+    duration             = optional(string)
+    time_zone            = string
+    recur_every          = optional(string)
+  })
+  default = null
+}
+
+variable "maintenance_install_patches" {
+  description = "Install patches configuration for InGuestPatch scope. Must be specified when scope is InGuestPatch"
+  type = object({
+    reboot = optional(string, "IfRequired")
+    linux = optional(object({
+      classifications_to_include    = optional(list(string))
+      package_names_mask_to_exclude = optional(list(string))
+      package_names_mask_to_include = optional(list(string))
+    }))
+    windows = optional(object({
+      classifications_to_include = optional(list(string))
+      kb_numbers_to_exclude      = optional(list(string))
+      kb_numbers_to_include      = optional(list(string))
+    }))
+  })
+  default = null
+}

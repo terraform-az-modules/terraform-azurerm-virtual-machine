@@ -166,18 +166,20 @@ module "virtual-machine" {
       enabled = false
     }
   }
-  subnet_id                 = module.subnet.subnet_ids.subnet1
-  private_ip_addresses      = ["10.0.1.9"]
-  network_security_group_id = module.security_group.id
-  vm_size                   = "Standard_B1s"
-  admin_username            = "ubuntu"
-  public_key                = "ssh-rsa AAA"
-  caching                   = "ReadWrite"
-  disk_size_gb              = 30
-  image_publisher           = "Canonical"
-  image_offer               = "0001-com-ubuntu-server-jammy"
-  image_sku                 = "22_04-lts-gen2"
-  image_version             = "latest"
+  subnet_id                        = module.subnet.subnet_ids.subnet1
+  private_ip_addresses             = ["10.0.1.9"]
+  network_security_group_id        = module.security_group.id
+  vm_size                          = "Standard_B1s"
+  admin_username                   = "ubuntu"
+  public_key                       = "ssh-rsa AAA"
+  caching                          = "ReadWrite"
+  disk_size_gb                     = 30
+  image_publisher                  = "Canonical"
+  image_offer                      = "0001-com-ubuntu-server-jammy"
+  image_sku                        = "22_04-lts-gen2"
+  image_version                    = "latest"
+  allow_extension_operations       = true
+  enable_maintenance_configuration = true
   data_disks = [
     {
       name                 = "disk1"

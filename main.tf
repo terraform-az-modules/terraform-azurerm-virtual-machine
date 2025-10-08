@@ -2,8 +2,8 @@
 # Standard Tagging Module – Applies standard tags to all resources for traceability
 ##-----------------------------------------------------------------------------
 module "labels" {
-  source          = "terraform-az-modules/tags/azure"
-  version         = "1.0.0"
+  source = "../labels"
+  # version         = "1.0.0"
   name            = var.custom_name == null ? var.name : var.custom_name
   location        = var.location
   environment     = var.environment
@@ -229,24 +229,24 @@ resource "azurerm_backup_policy_vm" "policy" {
     time      = var.backup_policy_time != null ? var.backup_policy_time : "23:00"
   }
   dynamic "retention_daily" {
-    for_each = var.backup_policy_retention["daily"].enabled ? [1] : []
+    for_each = try(var.backup_policy_retention["daily"].enabled, false) ? [1] : []
     content {
-      count = var.backup_policy_retention["daily"].count
+      count = try(var.backup_policy_retention["daily"].count, 7)
     }
   }
   dynamic "retention_weekly" {
-    for_each = var.backup_policy_retention["weekly"].enabled ? [1] : []
+    for_each = try(var.backup_policy_retention["weekly"].enabled, false) ? [1] : []
     content {
-      count    = var.backup_policy_retention["weekly"].count
-      weekdays = var.backup_policy_retention["weekly"].weekdays
+      count    = try(var.backup_policy_retention["weekly"].count, 4)
+      weekdays = try(var.backup_policy_retention["weekly"].weekdays, ["Sunday"])
     }
   }
   dynamic "retention_monthly" {
-    for_each = var.backup_policy_retention["monthly"].enabled ? [1] : []
+    for_each = try(var.backup_policy_retention["monthly"].enabled, false) ? [1] : []
     content {
-      count    = var.backup_policy_retention["monthly"].count
-      weekdays = var.backup_policy_retention["monthly"].weekdays
-      weeks    = var.backup_policy_retention["monthly"].weeks
+      count    = try(var.backup_policy_retention["monthly"].count, 12)
+      weekdays = try(var.backup_policy_retention["monthly"].weekdays, ["Sunday"])
+      weeks    = try(var.backup_policy_retention["monthly"].weeks, ["First"])
     }
   }
 }
@@ -284,12 +284,56 @@ resource "azurerm_dev_test_global_vm_shutdown_schedule" "shutdown_schedule" {
   ]
 }
 
+resource "azurerm_maintenance_configuration" "main" {
+  count                    = var.enable && var.enable_maintenance_configuration ? 1 : 0
+  name                     = var.resource_position_prefix ? format("mc-vm-%s", local.name) : format("%s-mc-vm", local.name)
+  resource_group_name      = var.resource_group_name
+  location                 = var.location
+  scope                    = var.maintenance_configuration_scope
+  visibility               = var.maintenance_configuration_visibility
+  in_guest_user_patch_mode = var.maintenance_configuration_scope == "InGuestPatch" ? var.maintenance_in_guest_user_patch_mode : null
+  properties               = var.maintenance_configuration_properties
+  tags                     = module.labels.tags
+  dynamic "window" {
+    for_each = var.maintenance_window != null ? [var.maintenance_window] : []
+    content {
+      start_date_time      = window.value.start_date_time
+      expiration_date_time = window.value.expiration_date_time
+      duration             = window.value.duration
+      time_zone            = window.value.time_zone
+      recur_every          = window.value.recur_every
+    }
+  }
+  dynamic "install_patches" {
+    for_each = var.maintenance_configuration_scope == "InGuestPatch" && var.maintenance_install_patches != null ? [var.maintenance_install_patches] : []
+    content {
+      reboot = install_patches.value.reboot
+      dynamic "linux" {
+        for_each = !var.is_vm_windows && install_patches.value.linux != null ? [install_patches.value.linux] : []
+        content {
+          classifications_to_include    = linux.value.classifications_to_include
+          package_names_mask_to_exclude = linux.value.package_names_mask_to_exclude
+          package_names_mask_to_include = linux.value.package_names_mask_to_include
+        }
+      }
+      dynamic "windows" {
+        for_each = var.is_vm_windows && install_patches.value.windows != null ? [install_patches.value.windows] : []
+        content {
+          classifications_to_include = windows.value.classifications_to_include
+          kb_numbers_to_exclude      = windows.value.kb_numbers_to_exclude
+          kb_numbers_to_include      = windows.value.kb_numbers_to_include
+        }
+      }
+    }
+  }
+}
+
 ##-----------------------------------------------------------------------------
 ## Maintenance Assignment - Associates VMs with maintenance configurations
 ##-----------------------------------------------------------------------------
 resource "azurerm_maintenance_assignment_virtual_machine" "vm_assign" {
-  count                        = length(var.maintenance_configuration_resource_id) > 0 ? 1 : 0
+  count                        = var.enable && var.enable_maintenance_configuration ? 1 : 0
   location                     = var.location
-  maintenance_configuration_id = var.maintenance_configuration_resource_id
+  maintenance_configuration_id = azurerm_maintenance_configuration.main[0].id
   virtual_machine_id           = var.is_vm_windows ? azurerm_windows_virtual_machine.win_vm[0].id : azurerm_linux_virtual_machine.default[0].id
 }
