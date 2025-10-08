@@ -178,8 +178,6 @@ module "virtual-machine" {
   image_offer                      = "0001-com-ubuntu-server-jammy"
   image_sku                        = "22_04-lts-gen2"
   image_version                    = "latest"
-  allow_extension_operations       = true
-  enable_maintenance_configuration = true
   data_disks = [
     {
       name                 = "disk1"
