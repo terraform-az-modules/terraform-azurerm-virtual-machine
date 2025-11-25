@@ -5,13 +5,27 @@ on:
   pull_request:
   workflow_dispatch:
 jobs:
-# Update 'Job name' and 'working_directory' as needed based on the module structure.
-  complete-example:
+  linux-vm:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './examples/complete/'
-  
-# Seperate Job for TFlint workflow call
+      working_directory: './examples/linux-vm/'
+
+  windows-vm:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    with:
+      working_directory: './examples/windows-vm/'
+
+  auto-shutdown:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    with:
+      working_directory: './examples/auto-shutdown/'
+
+  backup-policy:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    with:
+      working_directory: './examples/backup-policy/'
+
+  # Seperate Job for TFlint workflow call
   tf-lint:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-lint.yml@master
     secrets:
