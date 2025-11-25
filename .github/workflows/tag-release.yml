@@ -10,4 +10,4 @@ jobs:
     with:
       target_branch: master
     secrets:
-      GITHUB: ${{ secrets.GITHUB }}
+      GITHUB: ${{ secrets.GITHUB_TOKEN }}

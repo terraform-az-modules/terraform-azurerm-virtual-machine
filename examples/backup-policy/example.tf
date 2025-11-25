@@ -9,8 +9,8 @@ data "azurerm_client_config" "current_client_config" {}
 ## Resource group in which all resources will be deployed.
 ##-----------------------------------------------------------------------------
 module "resource_group" {
-  source      = "terraform-az-modules/resource-group/azure"
-  version     = "1.0.0"
+  source      = "terraform-az-modules/resource-group/azurerm"
+  version     = "1.0.3"
   name        = "core"
   environment = "dev"
   location    = "centralus"
@@ -21,8 +21,8 @@ module "resource_group" {
 # Virtual Network
 # ------------------------------------------------------------------------------
 module "vnet" {
-  source              = "terraform-az-modules/vnet/azure"
-  version             = "1.0.0"
+  source              = "terraform-az-modules/vnet/azurerm"
+  version             = "1.0.3"
   name                = "core"
   environment         = "dev"
   label_order         = ["name", "environment", "location"]
@@ -35,8 +35,8 @@ module "vnet" {
 # Subnet
 # ------------------------------------------------------------------------------
 module "subnet" {
-  source               = "terraform-az-modules/subnet/azure"
-  version              = "1.0.0"
+  source               = "terraform-az-modules/subnet/azurerm"
+  version              = "1.0.1"
   environment          = "dev"
   label_order          = ["name", "environment", "location"]
   resource_group_name  = module.resource_group.resource_group_name
@@ -54,8 +54,8 @@ module "subnet" {
 # Network Security Group
 #-----------------------------------------------------------------------------
 module "security_group" {
-  source              = "terraform-az-modules/nsg/azure"
-  version             = "1.0.0"
+  source              = "terraform-az-modules/nsg/azurem"
+  version             = "1.0.3"
   environment         = "dev"
   label_order         = ["name", "environment", "location"]
   resource_group_name = module.resource_group.resource_group_name
@@ -79,8 +79,8 @@ module "security_group" {
 # Log Analytics
 #-----------------------------------------------------------------------------
 module "log-analytics" {
-  source                      = "terraform-az-modules/log-analytics/azure"
-  version                     = "1.0.0"
+  source                      = "terraform-az-modules/log-analytics/azurerm"
+  version                     = "1.0.2"
   name                        = "core"
   environment                 = "dev"
   label_order                 = ["name", "environment", "location"]
@@ -93,14 +93,13 @@ module "log-analytics" {
 # Key Vault
 #-----------------------------------------------------------------------------
 module "key_vault" {
-  source                        = "terraform-az-modules/key-vault/azure"
-  version                       = "1.0.0"
+  source                        = "terraform-az-modules/key-vault/azurerm"
+  version                       = "1.0.1"
   name                          = "core"
   environment                   = "dev"
   label_order                   = ["name", "environment", "location"]
   resource_group_name           = module.resource_group.resource_group_name
   location                      = module.resource_group.resource_group_location
-  custom_name                   = "testing3030"
   subnet_id                     = module.subnet.subnet_ids.subnet1
   public_network_access_enabled = true
   sku_name                      = "premium"
@@ -117,10 +116,11 @@ module "key_vault" {
 # Private DNS Zone
 # ------------------------------------------------------------------------------
 module "private_dns_zone" {
-  source              = "terraform-az-modules/private-dns/azure"
-  version             = "1.0.0"
-  name                = "dns"
+  source              = "terraform-az-modules/private-dns/azurerm"
+  version             = "1.0.2"
+  name                = "core"
   environment         = "dev"
+  label_order         = ["name", "environment", "location"]
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
   private_dns_config = [
@@ -166,18 +166,18 @@ module "virtual-machine" {
       enabled = false
     }
   }
-  subnet_id                        = module.subnet.subnet_ids.subnet1
-  private_ip_addresses             = ["10.0.1.9"]
-  network_security_group_id        = module.security_group.id
-  vm_size                          = "Standard_B1s"
-  admin_username                   = "ubuntu"
-  public_key                       = "ssh-rsa AAA"
-  caching                          = "ReadWrite"
-  disk_size_gb                     = 30
-  image_publisher                  = "Canonical"
-  image_offer                      = "0001-com-ubuntu-server-jammy"
-  image_sku                        = "22_04-lts-gen2"
-  image_version                    = "latest"
+  subnet_id                 = module.subnet.subnet_ids.subnet1
+  private_ip_addresses      = ["10.0.1.9"]
+  network_security_group_id = module.security_group.id
+  vm_size                   = "Standard_B1s"
+  admin_username            = "ubuntu"
+  public_key                = "ssh-rsa AAA"
+  caching                   = "ReadWrite"
+  disk_size_gb              = 30
+  image_publisher           = "Canonical"
+  image_offer               = "0001-com-ubuntu-server-jammy"
+  image_sku                 = "22_04-lts-gen2"
+  image_version             = "latest"
   data_disks = [
     {
       name                 = "disk1"
