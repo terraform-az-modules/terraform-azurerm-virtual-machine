@@ -88,3 +88,11 @@ output "vm_backup_policy_id" {
   description = "The ID of the VM Backup Policy."
   value       = try(azurerm_backup_policy_vm.policy[0].id, [])
 }
+
+##-----------------------------------------------------------------------------
+## IP Configuration Outputs
+##-----------------------------------------------------------------------------
+output "ip_configuration_name" {
+  value       = azurerm_network_interface.default[0].ip_configuration[0].name
+  description = "The name of the IP Configuration."
+}
