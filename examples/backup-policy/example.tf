@@ -171,7 +171,7 @@ module "virtual-machine" {
   network_security_group_id = module.security_group.id
   vm_size                   = "Standard_B1s"
   admin_username            = "ubuntu"
-  public_key                = "ssh-rsa AAA"
+  public_key                = file("~/.ssh/their_terraform_key.pub") # user’s own public key
   caching                   = "ReadWrite"
   disk_size_gb              = 30
   image_publisher           = "Canonical"
