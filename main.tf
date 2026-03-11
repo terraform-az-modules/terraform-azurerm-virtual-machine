@@ -117,7 +117,7 @@ resource "azurerm_managed_disk" "data_disk" {
     data_disk : data_disk,
     }
   } : {}
-  name                          = format("%s-%s-vm-disk", local.name, each.value.data_disk.name)
+  name                          = var.resource_position_prefix ? format("vm-disk-%s-%s", each.value.data_disk.name, local.name) : format("%s-%s-vm-disk", each.value.data_disk.name, local.name)
   resource_group_name           = var.resource_group_name
   location                      = var.location
   storage_account_type          = lookup(each.value.data_disk, "storage_account_type", "StandardSSD_LRS")
