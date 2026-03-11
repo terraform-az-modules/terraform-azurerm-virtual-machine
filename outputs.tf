@@ -67,7 +67,7 @@ output "key_id" {
 ## VM Extension Outputs
 ##-----------------------------------------------------------------------------
 output "extension_id" {
-  value       = { for id in azurerm_virtual_machine_extension.vm_insight_monitor_agent : id.name => id.id }
+  value       = { for id in azurerm_virtual_machine_extension.main : id.name => id.id }
   description = "The ID of the Virtual Machine Extension."
 }
 

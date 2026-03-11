@@ -4,7 +4,7 @@
 resource "azurerm_role_assignment" "azurerm_disk_encryption_set_key_vault_access" {
   count                = var.enable && var.enable_disk_encryption_set ? 1 : 0
   scope                = var.key_vault_id
-  role_definition_name = var.role_definition_name
+  role_definition_name = "Key Vault Crypto Service Encryption User"
   principal_id         = azurerm_disk_encryption_set.main[0].identity[0].principal_id
 }
 

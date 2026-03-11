@@ -609,12 +609,6 @@ variable "vault_sku" {
   description = "The SKU of the Key Vault. Possible values: Standard, Premium."
 }
 
-variable "role_definition_name" {
-  type        = string
-  default     = "Key Vault Crypto Service Encryption User"
-  description = "The name of the built-in role for Key Vault encryption."
-}
-
 variable "key_type" {
   type        = string
   default     = "RSA-HSM"
