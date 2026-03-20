@@ -9,21 +9,25 @@ jobs:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/linux-vm/'
+      provider: none
 
   windows-vm:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/windows-vm/'
+      provider: none
 
   auto-shutdown:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/auto-shutdown/'
+      provider: none
 
   backup-policy:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/backup-policy/'
+      provider: none
 
   # Seperate Job for TFlint workflow call
   tf-lint:
