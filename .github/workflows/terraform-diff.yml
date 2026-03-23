@@ -8,7 +8,7 @@ on:
 jobs:
   linux-vm:
     if: github.actor != 'dependabot[bot]'
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yaml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yml@master
     with:
       provider: 'azurerm'
       terraform_directory: 'examples/linux-vm'
@@ -19,7 +19,7 @@ jobs:
 
   windows-vm:
     if: github.actor != 'dependabot[bot]'
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yaml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yml@master
     with:
       provider: 'azurerm'
       terraform_directory: 'examples/windows-vm'
@@ -30,7 +30,7 @@ jobs:
 
   auto-shutdown:
     if: github.actor != 'dependabot[bot]'
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yaml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yml@master
     with:
       provider: 'azurerm'
       terraform_directory: 'examples/auto-shutdown'
@@ -41,7 +41,7 @@ jobs:
 
   backup-policy:
     if: github.actor != 'dependabot[bot]'
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yaml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yml@master
     with:
       provider: 'azurerm'
       terraform_directory: 'examples/backup-policy'

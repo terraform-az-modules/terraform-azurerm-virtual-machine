@@ -86,7 +86,7 @@ resource "azurerm_network_interface_security_group_association" "default" {
 ##-----------------------------------------------------------------------------
 resource "azurerm_disk_encryption_set" "main" {
   count               = var.enable && var.enable_disk_encryption_set ? 1 : 0
-  name                = var.resource_position_prefix ? format("des-%s", local.name) : format("%s-des", local.name)
+  name                = var.resource_position_prefix ? format("des-vm-%s", local.name) : format("%s-des-vm", local.name)
   resource_group_name = var.resource_group_name
   location            = var.location
   key_vault_key_id    = var.enable_disk_encryption_set ? azurerm_key_vault_key.main[0].id : null
@@ -100,7 +100,7 @@ resource "azurerm_disk_encryption_set" "main" {
 ##-----------------------------------------------------------------------------
 resource "azurerm_key_vault_key" "main" {
   count           = var.enable && var.enable_disk_encryption_set ? 1 : 0
-  name            = var.resource_position_prefix ? format("kv-%s", local.name) : format("%s-kv", local.name)
+  name            = var.resource_position_prefix ? format("cmk-key-vm-%s", local.name) : format("%s-cmk-key-vm", local.name)
   key_vault_id    = var.key_vault_id
   key_type        = var.key_type
   key_size        = var.key_size
