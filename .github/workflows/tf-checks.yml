@@ -1,36 +1,36 @@
 name: tf-checks
+
 on:
-  push:
-    branches: [ master ]
   pull_request:
   workflow_dispatch:
+
 jobs:
   linux-vm:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/stf-checks.yml@v2
     with:
       working_directory: './examples/linux-vm/'
       provider: none
 
   windows-vm:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/stf-checks.yml@v2
     with:
       working_directory: './examples/windows-vm/'
       provider: none
 
   auto-shutdown:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/stf-checks.yml@v2
     with:
       working_directory: './examples/auto-shutdown/'
       provider: none
 
   backup-policy:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/stf-checks.yml@v2
     with:
       working_directory: './examples/backup-policy/'
       provider: none
 
   # Seperate Job for TFlint workflow call
   tf-lint:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-lint.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-lint.yml@v2
     secrets:
       GITHUB: ${{ secrets.GITHUB }}
