@@ -1,14 +1,16 @@
-name: Terraform plan Difference
+name: Terraform Plan PR Diff
 
 on:
   pull_request:
     branches:
-    - master
+      - master
+    paths:
+      - 'examples/complete/**'
 
 jobs:
   linux-vm:
     if: github.actor != 'dependabot[bot]'
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-diff-checks.yml@v2
     with:
       provider: 'azurerm'
       terraform_directory: 'examples/linux-vm'
@@ -19,7 +21,7 @@ jobs:
 
   windows-vm:
     if: github.actor != 'dependabot[bot]'
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-diff-checks.yml@v2
     with:
       provider: 'azurerm'
       terraform_directory: 'examples/windows-vm'
@@ -30,7 +32,7 @@ jobs:
 
   auto-shutdown:
     if: github.actor != 'dependabot[bot]'
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-diff-checks.yml@v2
     with:
       provider: 'azurerm'
       terraform_directory: 'examples/auto-shutdown'
@@ -41,7 +43,7 @@ jobs:
 
   backup-policy:
     if: github.actor != 'dependabot[bot]'
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-diff-checks.yml@v2
     with:
       provider: 'azurerm'
       terraform_directory: 'examples/backup-policy'
