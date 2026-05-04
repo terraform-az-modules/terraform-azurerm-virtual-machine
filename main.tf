@@ -82,6 +82,15 @@ resource "azurerm_network_interface_security_group_association" "default" {
 }
 
 ##-----------------------------------------------------------------------------
+## SSH KEY Generation - Creates SSH keys for secure Linux VM access
+##-----------------------------------------------------------------------------
+resource "tls_private_key" "ssh_key" {
+  count     = var.enable && var.generate_ssh_key ? 1 : 0
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+##-----------------------------------------------------------------------------
 ## Disk Encryption Set - Provides encryption for VM disks using Key Vault
 ##-----------------------------------------------------------------------------
 resource "azurerm_disk_encryption_set" "main" {

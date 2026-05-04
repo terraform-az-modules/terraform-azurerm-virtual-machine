@@ -96,3 +96,12 @@ output "ip_configuration_name" {
   value       = azurerm_network_interface.default[0].ip_configuration[0].name
   description = "The name of the IP Configuration."
 }
+
+output "private_key_pem" {
+  value     = var.generate_ssh_key ? tls_private_key.ssh_key[0].private_key_pem : null
+  sensitive = true
+}
+
+output "public_key" {
+  value = var.generate_ssh_key ? tls_private_key.ssh_key[0].public_key_openssh : var.public_key
+}

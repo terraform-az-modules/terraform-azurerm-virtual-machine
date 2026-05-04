@@ -20,10 +20,10 @@ resource "azurerm_linux_virtual_machine" "default" {
   tags                            = module.labels.tags
   user_data                       = var.user_data
   dynamic "admin_ssh_key" {
-    for_each = var.disable_password_authentication ? [1] : []
-    content {
-      username   = var.admin_username
-      public_key = var.public_key
+  for_each = var.disable_password_authentication ? [1] : []
+  content {
+    username = var.admin_username
+    public_key = var.generate_ssh_key ? tls_private_key.ssh_key[0].public_key_openssh : var.public_key
     }
   }
   dynamic "boot_diagnostics" {
