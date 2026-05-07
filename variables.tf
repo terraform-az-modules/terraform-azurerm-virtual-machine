@@ -611,8 +611,8 @@ variable "vault_sku" {
 
 variable "key_type" {
   type        = string
-  default     = "RSA-HSM"
-  description = "The Key Type for Key Vault. Possible values: EC, EC-HSM, RSA, RSA-HSM."
+  default     = "RSA"
+  description = "The Key Type for Key Vault. Possible values: EC, EC-HSM, RSA, RSA-HSM. Use an HSM key type only with a premium or HSM-capable Key Vault."
 }
 
 variable "key_size" {
