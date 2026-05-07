@@ -139,3 +139,4 @@
 | service\_vault\_tenant\_id | The Tenant ID associated with this Managed Service Identity. |
 | vm\_backup\_policy\_id | The ID of the VM Backup Policy. |
 | windows\_virtual\_machine\_id | The ID of the Windows Virtual Machine. |
+
