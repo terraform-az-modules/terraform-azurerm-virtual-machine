@@ -57,7 +57,7 @@
 | key\_opts | List of key operations for Key Vault keys | `list(string)` | <pre>[<br>  "decrypt",<br>  "encrypt",<br>  "sign",<br>  "unwrapKey",<br>  "verify",<br>  "wrapKey"<br>]</pre> | no |
 | key\_permissions | List of Key Vault key permissions | `list(string)` | <pre>[<br>  "Create",<br>  "Delete",<br>  "Get",<br>  "Purge",<br>  "Recover",<br>  "Update",<br>  "WrapKey",<br>  "UnwrapKey",<br>  "List",<br>  "Decrypt",<br>  "Sign"<br>]</pre> | no |
 | key\_size | Size of the RSA key in bytes (e.g., 1024, 2048). | `number` | `2048` | no |
-| key\_type | The Key Type for Key Vault. Possible values: EC, EC-HSM, RSA, RSA-HSM. | `string` | `"RSA-HSM"` | no |
+| key\_type | The Key Type for Key Vault. Possible values: EC, EC-HSM, RSA, RSA-HSM. Use an HSM key type only with a premium or HSM-capable Key Vault. | `string` | `"RSA"` | no |
 | key\_vault\_id | The ID of the Key Vault for disk encryption. | `any` | `null` | no |
 | key\_vault\_rbac\_auth\_enabled | Whether to use RBAC authorization for Key Vault instead of access policies. | `bool` | `true` | no |
 | label\_order | The order of labels used to construct resource names or tags. If not specified, defaults to ['name', 'environment', 'location']. | `list(any)` | <pre>[<br>  "name",<br>  "environment",<br>  "location"<br>]</pre> | no |
