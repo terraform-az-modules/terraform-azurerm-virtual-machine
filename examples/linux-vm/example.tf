@@ -97,7 +97,7 @@ module "log-analytics" {
 module "key_vault" {
   source                        = "terraform-az-modules/key-vault/azurerm"
   version                       = "1.0.1"
-  name                          = "core-ayush"
+  name                          = "app"
   environment                   = "dev"
   label_order                   = ["name", "environment", "location"]
   resource_group_name           = module.resource_group.resource_group_name
@@ -157,7 +157,6 @@ module "virtual-machine" {
   network_security_group_id = module.security_group.id
   vm_size                   = "Standard_B1s"
   admin_username            = "ubuntu"
-  generate_ssh_key          = true
   caching                   = "ReadWrite"
   disk_size_gb              = 30
   image_publisher           = "Canonical"

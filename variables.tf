@@ -138,12 +138,12 @@ variable "admin_password" {
   description = "The password for the local administrator account. Required for Windows VM."
 }
 
-# variable "public_key" {
-#   type        = string
-#   default     = null
-#   description = "SSH public key for authentication (e.g. `ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD3F6tyPEFEzV0LX3X8BsXdMsQ`)."
-#   sensitive   = true
-# }
+variable "public_key" {
+  type        = string
+  default     = null
+  description = "SSH public key for authentication (e.g. `ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD3F6tyPEFEzV0LX3X8BsXdMsQ`)."
+  sensitive   = true
+}
 
 variable "disable_password_authentication" {
   type        = bool
@@ -893,16 +893,4 @@ variable "maintenance_install_patches" {
     }))
   })
   default = null
-}
-
-variable "generate_ssh_key" {
-  description = "Generate SSH key inside module"
-  type        = bool
-  default     = true
-}
-
-variable "public_key" {
-  description = "Existing public key (used if generate_ssh_key = false)"
-  type        = string
-  default     = null
 }

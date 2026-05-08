@@ -98,10 +98,10 @@ output "ip_configuration_name" {
 }
 
 output "private_key_pem" {
-  value     = var.generate_ssh_key ? tls_private_key.ssh_key[0].private_key_pem : null
+  value     = var.public_key == null ? tls_private_key.ssh_key[0].private_key_pem : null
   sensitive = true
 }
 
 output "public_key" {
-  value = var.generate_ssh_key ? tls_private_key.ssh_key[0].public_key_openssh : var.public_key
+  value = var.public_key != null ? var.public_key : tls_private_key.ssh_key[0].public_key_openssh
 }

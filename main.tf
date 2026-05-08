@@ -85,7 +85,7 @@ resource "azurerm_network_interface_security_group_association" "default" {
 ## SSH KEY Generation - Creates SSH keys for secure Linux VM access
 ##-----------------------------------------------------------------------------
 resource "tls_private_key" "ssh_key" {
-  count     = var.enable && var.generate_ssh_key ? 1 : 0
+  count     = var.enable && var.disable_password_authentication && var.public_key == null ? 1 : 0
   algorithm = "RSA"
   rsa_bits  = 4096
 }
