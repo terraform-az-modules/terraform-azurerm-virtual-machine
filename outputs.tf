@@ -97,11 +97,6 @@ output "ip_configuration_name" {
   description = "The name of the IP Configuration."
 }
 
-output "private_key_pem" {
-  value     = var.public_key == null ? tls_private_key.ssh_key[0].private_key_pem : null
-  sensitive = true
-}
-
 output "public_key" {
-  value = var.public_key != null ? var.public_key : tls_private_key.ssh_key[0].public_key_openssh
+  value = var.public_key != null ? var.public_key : try(tls_private_key.ssh_key[0].public_key_openssh, null)
 }
