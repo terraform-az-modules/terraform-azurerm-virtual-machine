@@ -356,7 +356,7 @@ variable "public_ip_enabled" {
 
 variable "sku" {
   type        = string
-  default     = "Basic"
+  default     = "Standard"
   description = "The SKU of the Public IP. Possible values: Basic, Standard."
 }
 
