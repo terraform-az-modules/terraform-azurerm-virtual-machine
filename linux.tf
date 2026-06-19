@@ -23,7 +23,7 @@ resource "azurerm_linux_virtual_machine" "default" {
     for_each = var.disable_password_authentication ? [1] : []
     content {
       username   = var.admin_username
-      public_key = var.public_key
+      public_key = var.public_key != null ? var.public_key : tls_private_key.ssh_key[0].public_key_openssh
     }
   }
   dynamic "boot_diagnostics" {

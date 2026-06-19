@@ -96,3 +96,7 @@ output "ip_configuration_name" {
   value       = azurerm_network_interface.default[0].ip_configuration[0].name
   description = "The name of the IP Configuration."
 }
+
+output "public_key" {
+  value = var.public_key != null ? var.public_key : try(tls_private_key.ssh_key[0].public_key_openssh, null)
+}

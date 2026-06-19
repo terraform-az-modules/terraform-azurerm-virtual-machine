@@ -356,7 +356,7 @@ variable "public_ip_enabled" {
 
 variable "sku" {
   type        = string
-  default     = "Basic"
+  default     = "Standard"
   description = "The SKU of the Public IP. Possible values: Basic, Standard."
 }
 
@@ -521,7 +521,7 @@ variable "public_network_access_enabled" {
 
 variable "allow_extension_operations" {
   type        = bool
-  default     = false
+  default     = true
   description = "Whether extension operations are allowed on the VM"
 }
 
