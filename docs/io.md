@@ -6,7 +6,7 @@
 | admin\_password | The password for the local administrator account. Required for Windows VM. | `string` | `"Password@123"` | no |
 | admin\_username | Specifies the name of the local administrator account. Required for Windows VM. | `string` | `""` | no |
 | allocation\_method | Defines the allocation method for the Public IP. Possible values: Static, Dynamic. | `string` | `"Static"` | no |
-| allow\_extension\_operations | Whether extension operations are allowed on the VM | `bool` | `false` | no |
+| allow\_extension\_operations | Whether extension operations are allowed on the VM | `bool` | `true` | no |
 | availability\_set\_enabled | Whether to create an availability set for the VMs. | `bool` | `false` | no |
 | backup\_enabled | Whether to enable backup for the VM using Recovery Services Vault. | `bool` | `false` | no |
 | backup\_policy\_frequency | The frequency for the backup policy. Possible values: Daily, Weekly, Hourly. | `string` | `"Daily"` | no |
@@ -102,7 +102,7 @@
 | resource\_position\_prefix | Controls the placement of the resource type keyword (e.g., "vnet", "ddospp") in the resource name.<br><br>- If true, the keyword is prepended: "vnet-core-dev".<br>- If false, the keyword is appended: "core-dev-vnet".<br><br>This helps maintain naming consistency based on organizational preferences. | `bool` | `true` | no |
 | reverse\_fqdn | A fully qualified domain name that resolves to this public IP address. | `string` | `""` | no |
 | shutdown\_schedule | Configuration for VM auto-shutdown schedule. Set to null to disable shutdown scheduling.<br><br>The daily\_recurrence\_time is in 24-hour format (e.g., "2000" for 8:00 PM).<br>Notification settings control pre-shutdown alerts via email and webhook.<br>Timezone should be specified as a valid IANA time zone identifier. | <pre>object({<br>    daily_recurrence_time = string<br>    notification_settings = object({<br>      enabled         = bool<br>      email           = string<br>      time_in_minutes = string<br>      webhook_url     = string<br>    })<br>    timezone = string<br>    enabled  = bool<br>    tags     = map(string)<br>  })</pre> | `null` | no |
-| sku | The SKU of the Public IP. Possible values: Basic, Standard. | `string` | `"Basic"` | no |
+| sku | The SKU of the Public IP. Possible values: Basic, Standard. | `string` | `"Standard"` | no |
 | source\_image\_id | The ID of a custom Image to use for the VM. | `any` | `null` | no |
 | storage\_account\_id | The ID of the Storage Account for diagnostic logs. | `string` | `null` | no |
 | storage\_image\_reference\_enabled | Whether to use the platform image reference or a custom image. | `bool` | `true` | no |
@@ -135,6 +135,7 @@
 | network\_interface\_sg\_association\_id | The (Terraform specific) ID of the Association between the Network Interface and the Network Interface. |
 | public\_ip\_address | The IP address value that was allocated. |
 | public\_ip\_id | The Public IP ID. |
+| public\_key | n/a |
 | service\_vault\_id | The Principal ID associated with this Managed Service Identity. |
 | service\_vault\_tenant\_id | The Tenant ID associated with this Managed Service Identity. |
 | vm\_backup\_policy\_id | The ID of the VM Backup Policy. |
