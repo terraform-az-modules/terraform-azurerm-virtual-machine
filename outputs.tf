@@ -98,5 +98,7 @@ output "ip_configuration_name" {
 }
 
 output "public_key" {
-  value = var.public_key != null ? var.public_key : try(tls_private_key.ssh_key[0].public_key_openssh, null)
+  value     = var.public_key != null ? var.public_key : try(tls_private_key.ssh_key[0].public_key_openssh, null)
+  sensitive = true
+
 }
