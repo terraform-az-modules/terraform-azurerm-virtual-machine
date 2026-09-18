@@ -333,17 +333,17 @@ variable "primary" {
   description = "Is this the Primary IP Configuration? Must be true for the first ip_configuration."
 }
 
-variable "network_interface_sg_enabled" {
-  type        = bool
-  default     = true
-  description = "Whether to attach a Network Security Group to the network interface."
-}
+# variable "network_interface_sg_enabled" {
+#   type        = bool
+#   default     = true
+#   description = "Whether to attach a Network Security Group to the network interface."
+# }
 
-variable "network_security_group_id" {
-  type        = string
-  default     = ""
-  description = "The ID of the Network Security Group to attach to the Network Interface."
-}
+# variable "network_security_group_id" {
+#   type        = string
+#   default     = ""
+#   description = "The ID of the Network Security Group to attach to the Network Interface."
+# }
 
 ##-----------------------------------------------------------------------------
 ## Public IP
@@ -894,3 +894,25 @@ variable "maintenance_install_patches" {
   })
   default = null
 }
+
+variable "network_interface_sg_enabled" {
+    type        = bool
+    description = "Whether to associate an NSG directly with the VM network interface."
+    default     = false
+  }
+
+variable "network_security_group_id" {
+    type        = string
+    description = "NSG ID to associate with the VM network interface."
+    default     = null
+    nullable    = true
+
+    validation {
+      condition = (
+        !var.network_interface_sg_enabled ||
+        try(length(trimspace(var.network_security_group_id)) > 0, false)
+      )
+      error_message = "network_security_group_id must be supplied when network_interface_sg_enabled is true."
+    }
+  }
+
