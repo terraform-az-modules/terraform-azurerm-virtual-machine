@@ -17,6 +17,7 @@ resource "azurerm_public_ip" "additional" {
 }
 
 resource "azurerm_network_interface" "additional" {
+  #checkov:skip=CKV_AZURE_118:IP forwarding is a per-interface input, required on the data interfaces of network virtual appliances
   for_each                       = var.enable ? { for nic in var.additional_network_interfaces : nic.name => nic } : {}
   name                           = var.resource_position_prefix ? format("nic-%s-%s", local.name, each.key) : format("%s-%s-nic", local.name, each.key)
   resource_group_name            = var.resource_group_name
