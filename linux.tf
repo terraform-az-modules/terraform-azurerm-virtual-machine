@@ -7,7 +7,7 @@ resource "azurerm_linux_virtual_machine" "default" {
   admin_username                  = var.admin_username
   admin_password                  = var.disable_password_authentication ? null : var.admin_password
   disable_password_authentication = var.disable_password_authentication
-  network_interface_ids           = [azurerm_network_interface.default[0].id]
+  network_interface_ids           = concat([azurerm_network_interface.default[0].id], [for nic in var.additional_network_interfaces : azurerm_network_interface.additional[nic.name].id])
   source_image_id                 = var.source_image_id
   availability_set_id             = var.availability_set_enabled ? azurerm_availability_set.default[0].id : null
   proximity_placement_group_id    = var.proximity_placement_group_id
@@ -19,6 +19,7 @@ resource "azurerm_linux_virtual_machine" "default" {
   allow_extension_operations      = var.allow_extension_operations
   tags                            = module.labels.tags
   user_data                       = var.user_data
+  custom_data                     = var.custom_data
   dynamic "admin_ssh_key" {
     for_each = var.disable_password_authentication ? [1] : []
     content {
@@ -78,6 +79,7 @@ resource "azurerm_linux_virtual_machine" "default" {
     }
   }
   depends_on = [
-    azurerm_role_assignment.azurerm_disk_encryption_set_key_vault_access
+    azurerm_role_assignment.azurerm_disk_encryption_set_key_vault_access,
+    azurerm_marketplace_agreement.default
   ]
 }

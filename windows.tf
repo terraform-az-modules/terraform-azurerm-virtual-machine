@@ -4,7 +4,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   computer_name                = var.computer_name != null ? var.computer_name : (var.resource_position_prefix ? format("win-vm-%s", local.name) : format("%s-win-vm", local.name))
   resource_group_name          = var.resource_group_name
   location                     = var.location
-  network_interface_ids        = [azurerm_network_interface.default[0].id]
+  network_interface_ids        = concat([azurerm_network_interface.default[0].id], [for nic in var.additional_network_interfaces : azurerm_network_interface.additional[nic.name].id])
   size                         = var.vm_size
   admin_username               = var.admin_username
   admin_password               = var.admin_password
@@ -80,6 +80,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     }
   }
   depends_on = [
-    azurerm_role_assignment.azurerm_disk_encryption_set_key_vault_access
+    azurerm_role_assignment.azurerm_disk_encryption_set_key_vault_access,
+    azurerm_marketplace_agreement.default
   ]
 }

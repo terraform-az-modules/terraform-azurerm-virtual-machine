@@ -11,6 +11,31 @@ output "network_interface_private_ip_addresses" {
   description = "The private IP addresses of the network interface."
 }
 
+output "additional_network_interface_ids" {
+  value       = { for k, nic in azurerm_network_interface.additional : k => nic.id }
+  description = "Map of additional network interface names to their IDs."
+}
+
+output "additional_network_interface_private_ip_addresses" {
+  value       = { for k, nic in azurerm_network_interface.additional : k => nic.private_ip_address }
+  description = "Map of additional network interface names to their primary private IP address."
+}
+
+output "additional_ip_configuration_names" {
+  value       = { for k, nic in azurerm_network_interface.additional : k => nic.ip_configuration[0].name }
+  description = "Map of additional network interface names to their IP configuration name."
+}
+
+output "additional_public_ip_ids" {
+  value       = { for k, pip in azurerm_public_ip.additional : k => pip.id }
+  description = "Map of additional network interface names to their public IP ID."
+}
+
+output "additional_public_ip_addresses" {
+  value       = { for k, pip in azurerm_public_ip.additional : k => pip.ip_address }
+  description = "Map of additional network interface names to their public IP address."
+}
+
 output "network_interface_sg_association_id" {
   value       = try(azurerm_network_interface_security_group_association.default[*].id, null)
   description = "The (Terraform specific) ID of the Association between the Network Interface and the Network Interface."
