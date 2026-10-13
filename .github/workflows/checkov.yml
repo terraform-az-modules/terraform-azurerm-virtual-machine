@@ -13,4 +13,8 @@ jobs:
     with:
       directory: '.'
       continue_on_error: 'true'
-      skip_check: 'CKV_TF_1,CKV2_AZURE_39,CKV_TF_2,CKV_AZURE_50,CKV_AZURE_112'
+      # CKV_AZURE_118 (IP forwarding) and CKV_AZURE_119 (public IP on a NIC) are
+      # per-interface opt-ins of additional_network_interfaces, both off by default;
+      # network virtual appliances need them. The shared workflow counts inline
+      # suppressions as findings, so they are skipped here.
+      skip_check: 'CKV_TF_1,CKV2_AZURE_39,CKV_TF_2,CKV_AZURE_50,CKV_AZURE_112,CKV_AZURE_118,CKV_AZURE_119'
