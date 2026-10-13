@@ -157,6 +157,13 @@ variable "user_data" {
   description = "A string containing custom data/cloud-init script for the VM."
 }
 
+variable "custom_data" {
+  type        = string
+  default     = null
+  sensitive   = true
+  description = "Base64 encoded custom data for the Linux VM. Network virtual appliances such as Palo Alto VM-Series read their bootstrap parameters from it."
+}
+
 ##-----------------------------------------------------------------------------
 ## VM Disk Configuration
 ##-----------------------------------------------------------------------------
@@ -276,6 +283,12 @@ variable "plan_product" {
   description = "Specifies the product of the marketplace image."
 }
 
+variable "marketplace_agreement_enabled" {
+  type        = bool
+  default     = false
+  description = "Whether to accept the marketplace agreement for the plan (plan_publisher, plan_product, plan_name). The acceptance is per subscription, so set it on one VM per subscription and plan."
+}
+
 ##-----------------------------------------------------------------------------
 ## Network Interface
 ##-----------------------------------------------------------------------------
@@ -295,6 +308,20 @@ variable "enable_ip_forwarding" {
   type        = bool
   default     = false
   description = "Should IP Forwarding be enabled on the network interface?"
+}
+
+variable "additional_network_interfaces" {
+  type = list(object({
+    name                           = string
+    subnet_id                      = string
+    ip_forwarding_enabled          = optional(bool, false)
+    accelerated_networking_enabled = optional(bool, false)
+    private_ip_address             = optional(string)
+    public_ip_enabled              = optional(bool, false)
+    public_ip_zones                = optional(list(string))
+  }))
+  default     = []
+  description = "Extra network interfaces attached after the default one, in list order. A static private IP is used when private_ip_address is set; public_ip_enabled creates a Standard static public IP on that interface."
 }
 
 variable "enable_accelerated_networking" {

@@ -99,6 +99,7 @@ resource "azurerm_disk_encryption_set" "main" {
   resource_group_name = var.resource_group_name
   location            = var.location
   key_vault_key_id    = var.enable_disk_encryption_set ? azurerm_key_vault_key.main[0].id : null
+  tags                = module.labels.tags
   identity {
     type = "SystemAssigned"
   }
@@ -134,6 +135,7 @@ resource "azurerm_managed_disk" "data_disk" {
   public_network_access_enabled = var.public_network_access_enabled
   disk_size_gb                  = each.value.data_disk.disk_size_gb
   disk_encryption_set_id        = var.enable_disk_encryption_set ? azurerm_disk_encryption_set.main[0].id : null
+  tags                          = module.labels.tags
   depends_on = [
     azurerm_role_assignment.azurerm_disk_encryption_set_key_vault_access
   ]

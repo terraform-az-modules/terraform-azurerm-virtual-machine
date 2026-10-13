@@ -29,6 +29,12 @@ jobs:
       working_directory: './examples/backup-policy/'
       provider: none
 
+  network-virtual-appliance:
+    uses: clouddrove/github-shared-workflows/.github/workflows/smurf-tf-checks.yml@v2
+    with:
+      working_directory: './examples/network-virtual-appliance/'
+      provider: none
+
   # Seperate Job for TFlint workflow call
   tf-lint:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-lint.yml@v2
