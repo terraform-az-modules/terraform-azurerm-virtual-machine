@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.4.0] - 2026-10-13
+### :sparkles: New Features
+- [`853e50f`](https://github.com/terraform-az-modules/terraform-azurerm-virtual-machine/commit/853e50fc844ed6e711ab06bd02619bb6644d0ca4) - additional network interfaces, marketplace agreement, custom_data *(PR [#29](https://github.com/terraform-az-modules/terraform-azurerm-virtual-machine/pull/29) by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [v1.3.0] - 2026-08-25
 ### :bug: Bug Fixes
 - [`95f487a`](https://github.com/terraform-az-modules/terraform-azurerm-virtual-machine/commit/95f487a1341c23553206fff72a22b89959c1a542) - fixed stf checks and remove path filter *(PR [#28](https://github.com/terraform-az-modules/terraform-azurerm-virtual-machine/pull/28) by [@karan-cd](https://github.com/karan-cd))*
@@ -31,3 +36,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump required_version to >= 1.10.0
 [v1.2.0]: https://github.com/terraform-az-modules/terraform-azurerm-virtual-machine/compare/v1.1.2...v1.2.0
 [v1.3.0]: https://github.com/terraform-az-modules/terraform-azurerm-virtual-machine/compare/v1.2.0...v1.3.0
+[v1.4.0]: https://github.com/terraform-az-modules/terraform-azurerm-virtual-machine/compare/v1.3.0...v1.4.0
