@@ -3,6 +3,7 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | additional\_capabilities\_enabled | Whether to enable additional capabilities for the VM. | `bool` | `false` | no |
+| additional\_network\_interfaces | Extra network interfaces attached after the default one, in list order. A static private IP is used when private\_ip\_address is set; public\_ip\_enabled creates a Standard static public IP on that interface. | <pre>list(object({<br>    name                           = string<br>    subnet_id                      = string<br>    ip_forwarding_enabled          = optional(bool, false)<br>    accelerated_networking_enabled = optional(bool, false)<br>    private_ip_address             = optional(string)<br>    public_ip_enabled              = optional(bool, false)<br>    public_ip_zones                = optional(list(string))<br>  }))</pre> | `[]` | no |
 | admin\_password | The password for the local administrator account. Required for Windows VM. | `string` | `"Password@123"` | no |
 | admin\_username | Specifies the name of the local administrator account. Required for Windows VM. | `string` | `""` | no |
 | allocation\_method | Defines the allocation method for the Public IP. Possible values: Static, Dynamic. | `string` | `"Static"` | no |
@@ -19,6 +20,7 @@
 | caching | Specifies the caching requirements for the OS Disk. Possible values: None, ReadOnly, ReadWrite. | `string` | `"ReadWrite"` | no |
 | computer\_name | Specifies the hostname of the Virtual Machine. | `string` | `null` | no |
 | create\_option | Specifies how the managed Disk should be created. Possible values: Attach, FromImage. | `string` | `"Empty"` | no |
+| custom\_data | Base64 encoded custom data for the Linux VM. Network virtual appliances such as Palo Alto VM-Series read their bootstrap parameters from it. | `string` | `null` | no |
 | custom\_name | Override default naming convention | `string` | `null` | no |
 | data\_disks | List of managed Data Disks to create for the VM. | <pre>list(object({<br>    name                 = string<br>    storage_account_type = string<br>    disk_size_gb         = number<br>    caching              = optional(string, "ReadWrite")<br>  }))</pre> | `[]` | no |
 | ddos\_protection\_mode | The DDoS protection mode of the public IP. | `string` | `"VirtualNetworkInherited"` | no |
@@ -74,6 +76,7 @@
 | maintenance\_window | Maintenance window configuration block | <pre>object({<br>    start_date_time      = string<br>    expiration_date_time = optional(string)<br>    duration             = optional(string)<br>    time_zone            = string<br>    recur_every          = optional(string)<br>  })</pre> | `null` | no |
 | managed | Specifies whether the availability set is managed (aligned) or classic. | `bool` | `true` | no |
 | managedby | ManagedBy, eg 'terraform-az-modules'. | `string` | `"terraform-az-modules"` | no |
+| marketplace\_agreement\_enabled | Whether to accept the marketplace agreement for the plan (plan\_publisher, plan\_product, plan\_name). The acceptance is per subscription, so set it on one VM per subscription and plan. | `bool` | `false` | no |
 | metric\_enabled | Whether diagnostic metrics are enabled. | `bool` | `true` | no |
 | name | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
 | network\_interface\_sg\_enabled | Whether to attach a Network Security Group to the network interface. | `bool` | `true` | no |
@@ -124,6 +127,11 @@
 
 | Name | Description |
 |------|-------------|
+| additional\_ip\_configuration\_names | Map of additional network interface names to their IP configuration name. |
+| additional\_network\_interface\_ids | Map of additional network interface names to their IDs. |
+| additional\_network\_interface\_private\_ip\_addresses | Map of additional network interface names to their primary private IP address. |
+| additional\_public\_ip\_addresses | Map of additional network interface names to their public IP address. |
+| additional\_public\_ip\_ids | Map of additional network interface names to their public IP ID. |
 | availability\_set\_id | The ID of the Availability Set. |
 | disk\_encryption\_set\_id | The ID of the Disk Encryption Set. |
 | extension\_id | The ID of the Virtual Machine Extension. |
